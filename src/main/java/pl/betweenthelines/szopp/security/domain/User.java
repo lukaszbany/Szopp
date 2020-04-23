@@ -2,6 +2,7 @@ package pl.betweenthelines.szopp.security.domain;
 
 
 import lombok.*;
+import pl.betweenthelines.szopp.domain.Customer;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -10,6 +11,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Builder
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "app_user")
@@ -35,6 +37,8 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User() {
-    }
+    @Setter
+    @OneToOne(mappedBy = "user")
+    private Customer customer;
+
 }

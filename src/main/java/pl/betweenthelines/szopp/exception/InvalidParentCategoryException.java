@@ -7,9 +7,9 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @NoArgsConstructor
 @ResponseStatus(BAD_REQUEST)
-public class UserAlreadyExists extends SzoppException {
+public class InvalidParentCategoryException extends SzoppException {
 
-    public UserAlreadyExists(String message) {
+    public InvalidParentCategoryException(String message) {
         super(message);
     }
 

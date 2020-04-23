@@ -10,7 +10,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.betweenthelines.szopp.security.UserDetailsServiceImpl;
 
+import static org.springframework.http.HttpMethod.*;
 import static pl.betweenthelines.szopp.security.domain.RoleName.ADMIN;
+import static pl.betweenthelines.szopp.security.domain.RoleName.STAFF;
 
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -26,8 +28,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/user/**").hasRole(ADMIN.name())
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/users/**").hasRole(ADMIN.name())
+                .antMatchers(POST, "/categories/**").hasAnyRole(ADMIN.name(), STAFF.name())
+                .antMatchers(PUT, "/categories/**").hasAnyRole(ADMIN.name(), STAFF.name())
+                .antMatchers(DELETE, "/categories/**").hasAnyRole(ADMIN.name(), STAFF.name())
+                .antMatchers(GET, "/categories/**").permitAll()
+                .antMatchers(GET, "/products/**").permitAll()
+                .antMatchers(POST, "/products/**").hasAnyRole(ADMIN.name(), STAFF.name())
+                .antMatchers(PUT, "/products/**").hasAnyRole(ADMIN.name(), STAFF.name())
+                .antMatchers(DELETE, "/products/**").hasAnyRole(ADMIN.name(), STAFF.name())
+                .antMatchers(GET, "/customers").hasAnyRole(ADMIN.name(), STAFF.name())
+                .antMatchers("/customers/my-data").permitAll()
+                .antMatchers("/auth/login").anonymous()
+                .antMatchers("/auth/register").anonymous()
+                .antMatchers("/auth/logout").authenticated()
                 .antMatchers("/").permitAll()
                 .and()
                 .csrf().disable();

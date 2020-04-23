@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
@@ -35,7 +34,8 @@ public class AuthenticationEndpoint {
         String password = loginDTO.getPassword();
 
         try {
-            request.login(username, password);
+            authenticationService.login(request, username, password);
+
         } catch (ServletException e) {
             throw new BadCredentialsException("Invalid credentials");
         }
@@ -53,7 +53,7 @@ public class AuthenticationEndpoint {
         return "OK";
     }
 
-    @RequestMapping(value = "/logout", method = GET)
+    @RequestMapping(value = "/logout", method = POST)
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) {
@@ -61,7 +61,6 @@ public class AuthenticationEndpoint {
         }
 
         new SecurityContextLogoutHandler().logout(request, response, auth);
-
         return "OK";
     }
 }

@@ -6,7 +6,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.betweenthelines.szopp.exception.UserAlreadyExists;
+import pl.betweenthelines.szopp.exception.UserAlreadyExistsException;
 import pl.betweenthelines.szopp.security.domain.User;
 import pl.betweenthelines.szopp.security.domain.repository.UserRepository;
 
@@ -33,7 +33,7 @@ class AuthenticationServiceTest {
     void shouldThrowIfUsernameExist() {
         givenExistingUser();
 
-        assertThrows(UserAlreadyExists.class, () -> authenticationService.registerUser(USERNAME, PASSWORD));
+        assertThrows(UserAlreadyExistsException.class, () -> authenticationService.registerUser(USERNAME, PASSWORD));
     }
 
     private void givenExistingUser() {
