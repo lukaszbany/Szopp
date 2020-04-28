@@ -42,26 +42,26 @@ public class CategoryEndpoint {
     }
 
     @RequestMapping(method = POST)
-    public String addCategory(@RequestBody @Valid AddCategoryDTO addCategoryDTO) {
+    public CategoryDTO addCategory(@RequestBody @Valid AddCategoryDTO addCategoryDTO) {
         String name = addCategoryDTO.getName();
         String description = addCategoryDTO.getDescription();
         Long parentId = addCategoryDTO.getParentCategoryId();
 
-        categoryService.addCategory(name, description, parentId);
+        Category newCategory = categoryService.addCategory(name, description, parentId);
 
-        return "OK";
+        return categoryDTOFactory.buildCategoryDTO(newCategory);
     }
 
     @RequestMapping(method = PUT)
-    public String editCategory(@RequestBody @Valid EditCategoryDTO editCategoryDTO) {
+    public CategoryDTO editCategory(@RequestBody @Valid EditCategoryDTO editCategoryDTO) {
         Long id = editCategoryDTO.getId();
         String name = editCategoryDTO.getName();
         String description = editCategoryDTO.getDescription();
         Long parentId = editCategoryDTO.getParentCategoryId();
 
-        categoryService.modifyCategory(id, name, description, parentId);
+        Category category = categoryService.modifyCategory(id, name, description, parentId);
 
-        return "OK";
+        return categoryDTOFactory.buildCategoryDTO(category);
     }
 
     @RequestMapping(method = DELETE, value = "{id}")

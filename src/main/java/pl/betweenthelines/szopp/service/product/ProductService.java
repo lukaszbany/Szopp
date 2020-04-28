@@ -63,6 +63,7 @@ public class ProductService {
                 .description(addProductDTO.getDescription())
                 .price(addProductDTO.getPrice())
                 .category(category)
+                .inStock(addProductDTO.getInStock())
                 .build();
     }
 
@@ -74,6 +75,7 @@ public class ProductService {
         product.setName(editProductDTO.getName());
         product.setDescription(editProductDTO.getDescription());
         product.setCategory(category);
+        product.setInStock(editProductDTO.getInStock());
     }
 
     @Transactional

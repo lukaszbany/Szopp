@@ -8,6 +8,7 @@ import javax.persistence.*;
 import static javax.persistence.GenerationType.IDENTITY;
 import static pl.betweenthelines.szopp.domain.CustomerType.INDIVIDUAL;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @Getter
 @Entity
@@ -16,6 +17,7 @@ import static pl.betweenthelines.szopp.domain.CustomerType.INDIVIDUAL;
 @Table(name = "app_customer")
 public class Customer {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
@@ -67,4 +69,21 @@ public class Customer {
     @Column(name = "nip")
     private String nip;
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", user=" + user.getId() +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", city='" + city + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", street='" + street + '\'' +
+                ", type=" + type +
+                ", companyName='" + companyName + '\'' +
+                ", nip='" + nip + '\'' +
+                '}';
+    }
 }

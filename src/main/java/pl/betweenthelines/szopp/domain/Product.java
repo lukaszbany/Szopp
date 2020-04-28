@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @Getter
 @NoArgsConstructor
@@ -15,6 +16,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "app_product")
 public class Product {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
@@ -37,5 +39,12 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Setter
+    @Column(name = "in_stock")
+    private int inStock;
+
+    public boolean isAvailable() {
+        return inStock > 0;
+    }
 
 }

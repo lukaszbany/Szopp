@@ -41,4 +41,14 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Customer customer;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                ", customer=" + customer.getId() +
+                '}';
+    }
 }

@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pl.betweenthelines.szopp.security.domain.RoleName;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -13,5 +16,6 @@ public class UserDTO {
 
     private Long id;
     private String username;
+    private List<RoleName> roleNames;
 
 }

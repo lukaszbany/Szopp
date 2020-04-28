@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -24,4 +25,7 @@ public class AddProductDTO {
     @NotNull
     private Long categoryId;
 
+    @Min(0)
+    @NotNull
+    private Integer inStock;
 }

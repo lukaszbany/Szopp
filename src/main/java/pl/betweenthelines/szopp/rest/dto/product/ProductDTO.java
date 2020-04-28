@@ -23,4 +23,6 @@ public class ProductDTO {
 
     private Long categoryId;
 
+    private Integer inStock;
+
 }

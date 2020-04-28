@@ -1,5 +1,6 @@
 package pl.betweenthelines.szopp.service.customer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.betweenthelines.szopp.domain.Customer;
@@ -9,11 +10,11 @@ import pl.betweenthelines.szopp.exception.NotFoundException;
 import pl.betweenthelines.szopp.rest.dto.customer.EditCustomerDTO;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static pl.betweenthelines.szopp.domain.CustomerType.INDIVIDUAL;
 
+@Slf4j
 @Service
 public class CustomerService {
 
@@ -41,7 +42,9 @@ public class CustomerService {
 
     @Transactional
     public void editCustomerData(EditCustomerDTO editCustomerDTO) {
-        Customer customer = customerInSessionService.getFromSessionOrCreate();
+        Customer customer = getCustomer();
+
+        log.info("Updating data of customer {}", customer.getId());
         fillFields(customer, editCustomerDTO);
     }
 
@@ -57,7 +60,6 @@ public class CustomerService {
         customer.setNip(editCustomerDTO.getNip());
     }
 
-    @NotNull
     private CustomerType getType(EditCustomerDTO editCustomerDTO) {
         if (editCustomerDTO.getType() != null) {
             return editCustomerDTO.getType();

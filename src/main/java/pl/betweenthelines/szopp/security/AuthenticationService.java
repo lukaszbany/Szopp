@@ -1,7 +1,6 @@
 package pl.betweenthelines.szopp.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import pl.betweenthelines.szopp.domain.Customer;
 import pl.betweenthelines.szopp.exception.SzoppException;
 import pl.betweenthelines.szopp.exception.UserAlreadyExistsException;
-import pl.betweenthelines.szopp.rest.controller.UserEndpoint;
 import pl.betweenthelines.szopp.security.domain.Role;
 import pl.betweenthelines.szopp.security.domain.RoleName;
 import pl.betweenthelines.szopp.security.domain.User;
@@ -26,10 +24,9 @@ import java.util.Optional;
 
 import static pl.betweenthelines.szopp.security.domain.RoleName.REGISTERED_USER;
 
+@Slf4j
 @Service
 public class AuthenticationService {
-
-    private Logger log = LoggerFactory.getLogger(UserEndpoint.class);
 
     @Autowired
     private UserRepository userRepository;

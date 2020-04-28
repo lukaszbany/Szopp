@@ -1,11 +1,11 @@
 package pl.betweenthelines.szopp.rest.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import pl.betweenthelines.szopp.rest.dto.user.UserDTO;
+import pl.betweenthelines.szopp.rest.dto.user.factory.UserDTOFactory;
 import pl.betweenthelines.szopp.security.domain.User;
 import pl.betweenthelines.szopp.security.domain.repository.UserRepository;
 
@@ -15,14 +15,17 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserEndpoint {
 
-    private Logger log = LoggerFactory.getLogger(UserEndpoint.class);
-
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserDTOFactory userDTOFactory;
+
     @RequestMapping(method = RequestMethod.GET)
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDTO> findAll() {
+        List<User> users = userRepository.findAll();
+
+        return userDTOFactory.buildUserDTOs(users);
     }
 
 }

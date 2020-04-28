@@ -1,5 +1,6 @@
 package pl.betweenthelines.szopp.service.category;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.betweenthelines.szopp.domain.Category;
@@ -10,6 +11,7 @@ import pl.betweenthelines.szopp.exception.NotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@Slf4j
 @Service
 public class CategoryService {
 
@@ -17,7 +19,7 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Transactional
-    public void addCategory(String name, String description, Long parentId) {
+    public Category addCategory(String name, String description, Long parentId) {
         Category category = Category.builder()
                 .name(name)
                 .description(description)
@@ -27,7 +29,8 @@ public class CategoryService {
             addParentCategory(category, parentId);
         }
 
-        categoryRepository.save(category);
+        log.info("Adding new category: {}", category);
+        return categoryRepository.save(category);
     }
 
     private void addParentCategory(Category category, Long parentId) {
@@ -38,13 +41,16 @@ public class CategoryService {
     }
 
     @Transactional
-    public void modifyCategory(Long categoryId, String name, String description, Long parentId) {
+    public Category modifyCategory(Long categoryId, String name, String description, Long parentId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(NotFoundException::new);
 
         category.setName(name);
         category.setDescription(description);
         setParentCategory(parentId, category);
+
+
+        return category;
     }
 
     private void setParentCategory(Long parentId, Category category) {
@@ -59,6 +65,7 @@ public class CategoryService {
     public void deleteCategory(Long categoryId) {
         Category category = getCategory(categoryId);
 
+        log.info("Deleting category {}", category);
         categoryRepository.delete(category);
     }
 

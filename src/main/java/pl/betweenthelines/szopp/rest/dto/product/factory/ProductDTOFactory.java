@@ -24,6 +24,7 @@ public class ProductDTOFactory {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .categoryId(getCategory(product))
+                .inStock(product.getInStock())
                 .build();
     }
 
