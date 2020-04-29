@@ -7,7 +7,7 @@ import pl.betweenthelines.szopp.domain.Order;
 import pl.betweenthelines.szopp.exception.CustomerDataIncompleteException;
 import pl.betweenthelines.szopp.exception.EmptyOrderException;
 import pl.betweenthelines.szopp.exception.ProductNotAvailableException;
-import pl.betweenthelines.szopp.service.product.ProductStockService;
+import pl.betweenthelines.szopp.service.order.CartQuantitiesService;
 
 import static org.springframework.util.StringUtils.isEmpty;
 import static pl.betweenthelines.szopp.domain.CustomerType.COMPANY;
@@ -17,7 +17,7 @@ import static pl.betweenthelines.szopp.domain.OrderStatus.NEW;
 public class OrderValidationService {
 
     @Autowired
-    private ProductStockService productStockService;
+    private CartQuantitiesService cartQuantitiesService;
 
     public void validateOnCheckout(Order order) {
         validateOrderIsNotEmpty(order);
@@ -66,6 +66,6 @@ public class OrderValidationService {
     }
 
     private void validateQuantities(Order order) {
-        productStockService.validateQuantities(order);
+        cartQuantitiesService.validateQuantities(order);
     }
 }

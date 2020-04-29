@@ -5,27 +5,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO {
+public class ImageDTO {
 
     private Long id;
 
-    private String name;
+    private String filename;
 
     private String description;
 
-    private BigDecimal price;
+    private Long productId;
 
-    private Long categoryId;
-
-    private Integer inStock;
-
-    private List<ImageDTO> images;
+    private int order;
 
 }

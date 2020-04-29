@@ -6,7 +6,7 @@ import pl.betweenthelines.szopp.domain.Order;
 import pl.betweenthelines.szopp.domain.OrderItem;
 import pl.betweenthelines.szopp.domain.Product;
 import pl.betweenthelines.szopp.exception.NoSuchProductInCartException;
-import pl.betweenthelines.szopp.service.product.ProductStockService;
+import pl.betweenthelines.szopp.service.order.CartQuantitiesService;
 
 import javax.transaction.Transactional;
 
@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 public class RemoveFromCartService extends OrderOperationService {
 
     @Autowired
-    private ProductStockService productStockService;
+    private CartQuantitiesService cartQuantitiesService;
 
     @Transactional
     public Order decreaseProductQuantity(Long productId) {
@@ -42,7 +42,7 @@ public class RemoveFromCartService extends OrderOperationService {
     }
 
     private void updateQuantities(Order orderInSession) {
-        productStockService.updateQuantitiesInCart(orderInSession);
+        cartQuantitiesService.updateQuantitiesInCart(orderInSession);
     }
 
 }

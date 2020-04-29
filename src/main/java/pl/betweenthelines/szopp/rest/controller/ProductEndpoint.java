@@ -2,11 +2,13 @@ package pl.betweenthelines.szopp.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.betweenthelines.szopp.domain.Product;
 import pl.betweenthelines.szopp.rest.dto.product.AddProductDTO;
 import pl.betweenthelines.szopp.rest.dto.product.EditProductDTO;
 import pl.betweenthelines.szopp.rest.dto.product.ProductDTO;
 import pl.betweenthelines.szopp.rest.dto.product.factory.ProductDTOFactory;
+import pl.betweenthelines.szopp.service.product.ProductImageService;
 import pl.betweenthelines.szopp.service.product.ProductService;
 
 import javax.validation.Valid;
@@ -19,6 +21,9 @@ public class ProductEndpoint {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProductImageService productImageService;
 
     @Autowired
     private ProductDTOFactory productDTOFactory;
@@ -61,6 +66,13 @@ public class ProductEndpoint {
     @RequestMapping(method = DELETE, value = "/products/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
+
+        return "OK";
+    }
+
+    @RequestMapping(method = POST, value = "/products/{productId}/image")
+    public String uploadProductImage(@PathVariable Long productId, @RequestParam MultipartFile image) {
+        productImageService.addProductImage(productId, image);
 
         return "OK";
     }

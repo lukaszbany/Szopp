@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.betweenthelines.szopp.domain.Order;
 import pl.betweenthelines.szopp.service.order.OrderInSessionService;
-import pl.betweenthelines.szopp.service.product.ProductStockService;
+import pl.betweenthelines.szopp.service.order.CartQuantitiesService;
 
 @Service
 public class GetCartService {
@@ -13,7 +13,7 @@ public class GetCartService {
     private OrderInSessionService orderInSessionService;
 
     @Autowired
-    private ProductStockService productStockService;
+    private CartQuantitiesService cartQuantitiesService;
 
     public Order getCart() {
         Order cart = orderInSessionService.getFromSessionOrCreate();
@@ -23,6 +23,6 @@ public class GetCartService {
     }
 
     private void updateQuantities(Order cart) {
-        productStockService.updateQuantitiesInCart(cart);
+        cartQuantitiesService.updateQuantitiesInCart(cart);
     }
 }

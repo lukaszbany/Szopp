@@ -7,7 +7,6 @@ import pl.betweenthelines.szopp.domain.Customer;
 import pl.betweenthelines.szopp.domain.Order;
 import pl.betweenthelines.szopp.domain.repository.OrderRepository;
 import pl.betweenthelines.szopp.service.customer.CustomerInSessionService;
-import pl.betweenthelines.szopp.service.product.ProductStockService;
 import pl.betweenthelines.szopp.session.SessionAttributes;
 
 import javax.transaction.Transactional;

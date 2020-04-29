@@ -1,9 +1,12 @@
 package pl.betweenthelines.szopp.domain;
 
 import lombok.*;
+import pl.betweenthelines.szopp.exception.SzoppException;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -43,8 +46,19 @@ public class Product {
     @Column(name = "in_stock")
     private int inStock;
 
+    @OneToMany(mappedBy = "product")
+    private List<ProductImage> images = new ArrayList<>();
+
     public boolean isAvailable() {
         return inStock > 0;
+    }
+
+    public void decrementStock(int count) {
+        if (count > this.inStock) {
+            throw new SzoppException();
+        }
+
+        this.inStock = this.inStock - count;
     }
 
 }

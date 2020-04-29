@@ -6,7 +6,7 @@ import pl.betweenthelines.szopp.domain.Order;
 import pl.betweenthelines.szopp.domain.OrderItem;
 import pl.betweenthelines.szopp.domain.Product;
 import pl.betweenthelines.szopp.exception.ProductNotAvailableException;
-import pl.betweenthelines.szopp.service.product.ProductStockService;
+import pl.betweenthelines.szopp.service.order.CartQuantitiesService;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class AddToCartService extends OrderOperationService {
 
     @Autowired
-    private ProductStockService productStockService;
+    private CartQuantitiesService cartQuantitiesService;
 
     @Transactional
     public Order increaseProductQuantity(Long productId) {
@@ -66,6 +66,6 @@ public class AddToCartService extends OrderOperationService {
     }
 
     private void updateQuantities(Order orderInSession) {
-        productStockService.updateQuantitiesInCart(orderInSession);
+        cartQuantitiesService.updateQuantitiesInCart(orderInSession);
     }
 }
