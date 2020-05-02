@@ -85,7 +85,7 @@ public class AuthenticationService {
     }
 
 
-    public User tryToGetLoggedUser() {
+    private User tryToGetLoggedUser() {
         return findLoggedUser()
                 .orElseThrow(SzoppException::new);
     }
@@ -113,6 +113,10 @@ public class AuthenticationService {
 
     public void login(HttpServletRequest request, String username, String password) throws ServletException {
         request.login(username, password);
+        updateCustomerInSession();
+    }
+
+    private void updateCustomerInSession() {
         User user = tryToGetLoggedUser();
         if (user.getCustomer() != null) {
             customerInSessionService.saveCustomerInSession(user.getCustomer());
