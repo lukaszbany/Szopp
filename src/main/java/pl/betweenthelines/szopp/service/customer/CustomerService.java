@@ -54,7 +54,8 @@ public class CustomerService {
         customer.setEmail(editCustomerDTO.getEmail());
         customer.setPhone(editCustomerDTO.getPhone());
         customer.setZipCode(editCustomerDTO.getZipCode());
-        customer.setCity(editCustomerDTO.getCompanyName());
+        customer.setCity(editCustomerDTO.getCity());
+        customer.setStreet(editCustomerDTO.getStreet());
         customer.setType(getType(editCustomerDTO));
         customer.setCompanyName(editCustomerDTO.getCompanyName());
         customer.setNip(editCustomerDTO.getNip());

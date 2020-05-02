@@ -36,7 +36,7 @@ public class CheckoutService {
     private ProductStockService productStockService;
 
     @Transactional(dontRollbackOn = ProductInCartNotAvailableAnymoreException.class)
-    public void checkout(@RequestBody(required = false) @Valid ShipmentAddressDTO shipmentAddressDTO) {
+    public void checkout(ShipmentAddressDTO shipmentAddressDTO) {
         Order order = orderInSessionService.getFromSessionOrCreate();
         validateOrder(order);
 

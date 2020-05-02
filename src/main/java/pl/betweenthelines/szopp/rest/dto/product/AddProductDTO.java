@@ -14,18 +14,18 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class AddProductDTO {
 
-    @NotBlank
+    @NotBlank(message = "{validation.product.name.blank}")
     private String name;
 
     private String description;
 
-    @NotNull
+    @NotNull(message = "{validation.product.price.blank}")
     private BigDecimal price;
 
-    @NotNull
+    @NotNull(message = "{validation.product.category.blank}")
     private Long categoryId;
 
-    @Min(0)
-    @NotNull
+    @Min(value = 0, message = "{validation.product.stock.negative}")
+    @NotNull(message = "{validation.product.stock.blank}")
     private Integer inStock;
 }

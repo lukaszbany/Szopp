@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class EditCategoryDTO {
 
-    @NotNull
+    @NotNull(message = "{validation.category.id.null}")
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "{validation.category.name.blank}")
     private String name;
 
     private String description;

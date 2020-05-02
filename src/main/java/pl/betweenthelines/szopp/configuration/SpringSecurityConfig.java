@@ -50,7 +50,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/login").anonymous()
                 .antMatchers("/auth/register").anonymous()
                 .antMatchers("/auth/logout").authenticated()
-//                .antMatchers("/").permitAll()
                 .and()
                 .csrf().disable();
     }

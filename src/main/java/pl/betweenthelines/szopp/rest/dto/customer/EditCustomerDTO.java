@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pl.betweenthelines.szopp.domain.CustomerType;
+import pl.betweenthelines.szopp.rest.dto.validation.ValidCustomerData;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ValidCustomerData(message = "{validation.company.data.blank}")
 public class EditCustomerDTO {
 
     @NotBlank(message = "{validation.first.name.blank}")
@@ -38,7 +40,7 @@ public class EditCustomerDTO {
     private String street;
 
     @NotNull(message = "{validation.type.blank}")
-    private CustomerType type; //TODO: Data validation for company and for individual
+    private CustomerType type;
 
     private String companyName;
 

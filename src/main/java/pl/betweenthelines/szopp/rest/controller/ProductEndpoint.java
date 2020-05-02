@@ -1,6 +1,7 @@
 package pl.betweenthelines.szopp.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.betweenthelines.szopp.domain.Product;
@@ -12,6 +13,7 @@ import pl.betweenthelines.szopp.service.product.ProductImageService;
 import pl.betweenthelines.szopp.service.product.ProductService;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -57,10 +59,10 @@ public class ProductEndpoint {
     }
 
     @RequestMapping(method = PUT, value = "/products")
-    public String editProduct(@RequestBody @Valid EditProductDTO editProductDTO) {
+    public ResponseEntity<String> editProduct(@RequestBody @Valid EditProductDTO editProductDTO) {
         productService.editProduct(editProductDTO);
 
-        return "OK";
+        return ResponseEntity.ok("Success");
     }
 
     @RequestMapping(method = DELETE, value = "/products/{id}")

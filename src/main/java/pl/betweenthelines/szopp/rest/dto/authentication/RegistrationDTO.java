@@ -7,19 +7,19 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Getter
-@PasswordsMatches
+@PasswordsMatches(message = "{validation.password.confirmation.match}")
 public class RegistrationDTO {
 
-    @NotBlank
-    @Size(min = 5, max = 50)
+    @NotBlank(message = "{validation.username.blank}")
+    @Size(min = 5, max = 50, message = "{validation.username.size}")
     private String username;
 
-    @NotBlank
-    @Size(min = 5)
+    @NotBlank(message = "{validation.password.blank}")
+    @Size(min = 5, message = "{validation.password.size}")
     private String password;
 
-    @NotBlank
-    @Size(min = 5)
+    @NotBlank(message = "{validation.password.blank}")
+    @Size(min = 5, message = "{validation.password.size}")
     private String confirmPassword;
 
 }

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class AddCategoryDTO {
 
-    @NotBlank
+    @NotBlank(message = "{validation.category.name.blank}")
     private String name;
 
     private String description;

@@ -2,6 +2,7 @@ package pl.betweenthelines.szopp.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.betweenthelines.szopp.domain.Order;
@@ -12,6 +13,8 @@ import pl.betweenthelines.szopp.service.order.checkout.CheckoutService;
 import pl.betweenthelines.szopp.service.order.operation.AddToCartService;
 import pl.betweenthelines.szopp.service.order.operation.GetCartService;
 import pl.betweenthelines.szopp.service.order.operation.RemoveFromCartService;
+
+import javax.validation.Valid;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -69,7 +72,7 @@ public class CartEndpoint {
     }
 
     @RequestMapping(method = POST, value = "/cart/checkout")
-    public String checkout(ShipmentAddressDTO shipmentAddressDTO) {
+    public String checkout(@RequestBody(required = false) @Valid ShipmentAddressDTO shipmentAddressDTO) {
         checkoutService.checkout(shipmentAddressDTO);
 
         return "OK";
