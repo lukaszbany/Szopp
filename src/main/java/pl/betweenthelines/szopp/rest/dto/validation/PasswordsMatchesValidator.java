@@ -7,8 +7,11 @@ import javax.validation.ConstraintValidatorContext;
 
 public class PasswordsMatchesValidator implements ConstraintValidator<PasswordsMatches, Object> {
 
+    private String message;
+
     @Override
     public void initialize(PasswordsMatches constraint) {
+        message = constraint.message();
     }
 
     @Override
@@ -17,6 +20,15 @@ public class PasswordsMatchesValidator implements ConstraintValidator<PasswordsM
         String password = registrationDTO.getPassword();
         String passwordConfirmation = registrationDTO.getConfirmPassword();
 
-        return password.equals(passwordConfirmation);
+        boolean valid = password != null && password.equals(passwordConfirmation);
+
+        if (!valid) {
+            context.buildConstraintViolationWithTemplate(message)
+                    .addPropertyNode("confirmPassword")
+                    .addConstraintViolation()
+                    .disableDefaultConstraintViolation();
+        }
+
+        return valid;
     }
 }

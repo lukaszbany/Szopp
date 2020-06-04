@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.betweenthelines.szopp.domain.OrderItem;
 import pl.betweenthelines.szopp.domain.Product;
-import pl.betweenthelines.szopp.rest.dto.customer.factory.CustomerDTOFactory;
 import pl.betweenthelines.szopp.rest.dto.order.customer.OrderItemDTO;
 import pl.betweenthelines.szopp.rest.dto.product.ProductDTO;
 import pl.betweenthelines.szopp.rest.dto.product.factory.ProductDTOFactory;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,15 +16,17 @@ import java.util.stream.Collectors;
 public class OrderItemDTOFactory {
 
     @Autowired
-    private CustomerDTOFactory customerDTOFactory;
-
-    @Autowired
     private ProductDTOFactory productDTOFactory;
 
     public List<OrderItemDTO> buildOrderItemDTOs(List<OrderItem> orderItems) {
         return orderItems.stream()
                 .map(this::buildOrderItemDTO)
+                .sorted(byId())
                 .collect(Collectors.toList());
+    }
+
+    private Comparator<OrderItemDTO> byId() {
+        return Comparator.comparing(OrderItemDTO::getId);
     }
 
     public OrderItemDTO buildOrderItemDTO(OrderItem orderItem) {
@@ -34,6 +36,7 @@ public class OrderItemDTOFactory {
                 .product(getProductDTO(orderItem.getProduct()))
                 .price(orderItem.getPrice())
                 .quantity(orderItem.getQuantity())
+                .totalPrice(orderItem.getTotalPrice())
                 .build();
     }
 

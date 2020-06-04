@@ -7,10 +7,12 @@ import lombok.Setter;
 import pl.betweenthelines.szopp.exception.InvalidOrderStatusException;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.math.BigDecimal.ZERO;
 import static javax.persistence.GenerationType.IDENTITY;
 import static pl.betweenthelines.szopp.domain.OrderStatus.NEW;
 
@@ -59,6 +61,12 @@ public class Order {
 
     private boolean canBeChangedTo(OrderStatus status) {
         return OrderStatus.TRANSITIONS.get(this.status).equals(status);
+    }
+
+    public BigDecimal getTotalPrice() {
+        return orderItems.stream()
+                .map(OrderItem::getTotalPrice)
+                .reduce(ZERO, BigDecimal::add);
     }
 
 }

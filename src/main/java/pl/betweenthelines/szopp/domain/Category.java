@@ -5,11 +5,11 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@ToString
 @Getter
 @NoArgsConstructor
 @Entity
@@ -44,5 +44,15 @@ public class Category {
     public Category(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", parentCategory=" + (parentCategory != null ? parentCategory.getId() : null) +
+                '}';
     }
 }

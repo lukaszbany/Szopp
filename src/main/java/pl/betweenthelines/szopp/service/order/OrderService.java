@@ -39,18 +39,18 @@ public class OrderService {
     }
 
     @Transactional
-    public List<Order> getCustomerOrders(Long customerId) {
-        Customer currentCustomer = getLoggedCustomerAndValidateRequest(customerId);
+    public List<Order> getCustomerOrders() {
+        Customer currentCustomer = getLoggedCustomer();
 
         return orderRepository.findAllByCustomerAndStatusNot(currentCustomer, NEW);
     }
 
-    private Customer getLoggedCustomerAndValidateRequest(Long customerId) {
+    private Customer getLoggedCustomer() {
         User loggedUser = authenticationService.findLoggedUser()
                 .orElseThrow(UserNotLoggedException::new);
 
         Customer currentCustomer = loggedUser.getCustomer();
-        if (currentCustomer == null || !currentCustomer.getId().equals(customerId)) {
+        if (currentCustomer == null) {
             log.info("Customer requested for order of other customer!");
             throw new NotFoundException();
         }
@@ -79,6 +79,11 @@ public class OrderService {
     private Order getOrder(Long orderId, OrderStatus status) {
         return orderRepository.findById(orderId)
                 .orElseThrow(NotFoundException::new);
+    }
+
+    @Transactional
+    public List<Order> getCustomerOrders(Customer customer) {
+        return orderRepository.findAllByCustomerAndStatusNot(customer, NEW);
     }
 
 }

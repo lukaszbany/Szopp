@@ -21,6 +21,7 @@ public enum Exceptions {
     INVALID_PARENT_CATEGORY_EXCEPTION(InvalidParentCategoryException.class, BAD_REQUEST, "exception.message.InvalidParentCategoryException"),
     METHOD_ARGUMENT_NOT_VALID_EXCEPTION(MethodArgumentNotValidException.class, BAD_REQUEST, "exception.message.MethodArgumentNotValidException"),
     NO_SUCH_ORDER_ITEM_IN_CART_EXCEPTION(NoSuchOrderItemInCartException.class, BAD_REQUEST, "exception.message.NoSuchOrderItemInCartException"),
+    NO_SUCH_USER_EXCEPTION(NoSuchUserException.class, BAD_REQUEST, "exception.message.NoSuchUserException"),
     NO_SUCH_PRODUCT_IN_CART_EXCEPTION(NoSuchProductInCartException.class, BAD_REQUEST, "exception.message.NoSuchProductInCartException"),
     NOT_FOUND_EXCEPTION(NotFoundException.class, NOT_FOUND, "exception.message.NotFoundException"),
     PRODUCT_IN_CART_NOT_AVAILABLE_ANYMORE_EXCEPTION(ProductInCartNotAvailableAnymoreException.class, BAD_REQUEST, "exception.message.ProductInCartNotAvailableAnymoreException"),
@@ -28,6 +29,7 @@ public enum Exceptions {
     SZOPP_EXCEPTION(SzoppException.class, BAD_REQUEST, "exception.message.SzoppException"),
     TOO_LARGE_IMAGE_EXCEPTION(TooLargeImageException.class, BAD_REQUEST, "exception.message.TooLargeImageException"),
     USER_ALREADY_EXISTS_EXCEPTION(UserAlreadyExistsException.class, BAD_REQUEST, "exception.message.UserAlreadyExistsException"),
+    USER_HAS_SUBMITTED_ORDERS_EXCEPTION(UserHasSubmittedOrdersException.class, BAD_REQUEST, "exception.message.UserHasSubmittedOrdersException"),
     USER_NOT_LOGGED_EXCEPTION(UserNotLoggedException.class, UNAUTHORIZED, "exception.message.UserNotLoggedException");
 
     private Class<? extends Exception> aClass;

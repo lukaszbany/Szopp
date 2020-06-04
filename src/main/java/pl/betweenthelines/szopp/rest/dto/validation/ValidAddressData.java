@@ -11,10 +11,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = CustomerDataValidator.class)
-public @interface ValidCustomerData {
+@Constraint(validatedBy = AddressDataValidator.class)
+public @interface ValidAddressData {
 
-    String message() default "Customer type is COMPANY, but has empty company data";
+    String message() default "{validation.company.data.blank}";
 
     Class<?>[] groups() default {};
 

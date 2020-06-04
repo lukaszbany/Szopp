@@ -4,7 +4,9 @@ import lombok.*;
 import pl.betweenthelines.szopp.security.domain.User;
 
 import javax.persistence.*;
+import java.util.List;
 
+import static java.util.Objects.nonNull;
 import static javax.persistence.GenerationType.IDENTITY;
 import static pl.betweenthelines.szopp.domain.CustomerType.INDIVIDUAL;
 
@@ -69,6 +71,10 @@ public class Customer {
     @Column(name = "nip")
     private String nip;
 
+    @Getter
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders;
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -85,5 +91,9 @@ public class Customer {
                 ", companyName='" + companyName + '\'' +
                 ", nip='" + nip + '\'' +
                 '}';
+    }
+
+    public boolean isLogged() {
+        return nonNull(user);
     }
 }

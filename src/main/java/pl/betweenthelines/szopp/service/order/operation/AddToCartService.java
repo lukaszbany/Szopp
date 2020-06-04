@@ -9,7 +9,6 @@ import pl.betweenthelines.szopp.exception.ProductNotAvailableException;
 import pl.betweenthelines.szopp.service.order.CartQuantitiesService;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 public class AddToCartService extends OrderOperationService {
@@ -22,12 +21,9 @@ public class AddToCartService extends OrderOperationService {
         Order order = orderInSessionService.getFromSessionOrCreate();
         Product product = productService.getProduct(productId);
 
-        Optional<OrderItem> currentItem = findExistingItem(order, product);
-        if (currentItem.isPresent()) {
-            return increaseQuantity(order, currentItem.get());
-        }
-
-        return addNewItem(product, order);
+        return findExistingItem(order, product)
+                .map(item -> increaseQuantity(order, item))
+                .orElseGet(() -> addNewItem(product, order));
     }
 
     @Transactional

@@ -78,14 +78,15 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
-    private Role findRole(RoleName name) {
+    public Role findRole(RoleName name) {
         Optional<Role> role = roleRepository.findByName(name);
 
-        return role.orElseThrow(SzoppException::new);
+        return role
+                .orElseThrow(SzoppException::new);
     }
 
 
-    private User tryToGetLoggedUser() {
+    public User tryToGetLoggedUser() {
         return findLoggedUser()
                 .orElseThrow(SzoppException::new);
     }

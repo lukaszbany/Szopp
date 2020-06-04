@@ -1,14 +1,17 @@
 package pl.betweenthelines.szopp.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.betweenthelines.szopp.domain.Order;
+import pl.betweenthelines.szopp.rest.dto.customer.AddressDataDTO;
 import pl.betweenthelines.szopp.rest.dto.order.customer.OrderDTO;
 import pl.betweenthelines.szopp.rest.dto.order.customer.factory.OrderDTOFactory;
-import pl.betweenthelines.szopp.rest.dto.shipment.ShipmentAddressDTO;
+import pl.betweenthelines.szopp.rest.success.SuccessResponse;
+import pl.betweenthelines.szopp.rest.success.SuccessResponseFactory;
 import pl.betweenthelines.szopp.service.order.checkout.CheckoutService;
 import pl.betweenthelines.szopp.service.order.operation.AddToCartService;
 import pl.betweenthelines.szopp.service.order.operation.GetCartService;
@@ -35,6 +38,9 @@ public class CartEndpoint {
 
     @Autowired
     private OrderDTOFactory orderDTOFactory;
+
+    @Autowired
+    private SuccessResponseFactory successResponseFactory;
 
     @RequestMapping(method = GET, value = "/cart")
     public OrderDTO getCart() {
@@ -72,9 +78,9 @@ public class CartEndpoint {
     }
 
     @RequestMapping(method = POST, value = "/cart/checkout")
-    public String checkout(@RequestBody(required = false) @Valid ShipmentAddressDTO shipmentAddressDTO) {
+    public ResponseEntity<SuccessResponse> checkout(@RequestBody(required = false) @Valid AddressDataDTO shipmentAddressDTO) {
         checkoutService.checkout(shipmentAddressDTO);
 
-        return "OK";
+        return successResponseFactory.buildSuccessResponseEntity("success.cart.checkout");
     }
 }

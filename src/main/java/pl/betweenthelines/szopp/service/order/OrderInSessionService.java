@@ -31,34 +31,51 @@ public class OrderInSessionService {
     public Order getFromSessionOrCreate() {
         Long orderId = sessionAttributes.getOrderId();
 
-        if (orderId != null) {
-            Optional<Order> orderInSession = orderRepository.findByIdAndStatus(orderId, NEW);
-            if (orderInSession.isPresent()) {
-                return getOrderFromSession(orderInSession.get());
-            }
-        }
-
-        return createOrder();
+        return Optional.ofNullable(orderId)
+                .flatMap(this::findNewOrderById)
+                .filter(this::isOwnedByCustomerInSession)
+                .orElseGet(this::getFromLoggedCustomerOrCreate);
     }
 
-    private Order getOrderFromSession(Order orderInSession) {
-        log.debug("Found order id {} in session.", orderInSession.getId());
-        updateCustomerIfNeeded(orderInSession);
-
-        return orderInSession;
+    private Optional<Order> findNewOrderById(Long orderId) {
+        return orderRepository.findByIdAndStatus(orderId, NEW);
     }
 
-    private void updateCustomerIfNeeded(Order orderInSession) {
+    private boolean isOwnedByCustomerInSession(Order orderInSession) {
         Customer customerInSession = customerInSessionService.getFromSessionOrCreate();
-        if (!orderInSession.getCustomer().equals(customerInSession)) {
-            log.info("Order id {} has different customer than saved in session. Probably customer just logged in. Changing customer to {}.", orderInSession.getId(), customerInSession.getId());
-            orderInSession.setCustomer(customerInSession);
-        }
+        boolean isOwnedByCustomerInSession = orderInSession.getCustomer().equals(customerInSession);
+        log.info("Order {} is owned by customer {}: {}",
+                orderInSession.getId(), customerInSession.getId(), isOwnedByCustomerInSession);
+
+        return isOwnedByCustomerInSession;
+    }
+
+    private Order getFromLoggedCustomerOrCreate() {
+        Customer customerInSession = customerInSessionService.getFromSessionOrCreate();
+
+        return Optional.ofNullable(customerInSession)
+                .filter(Customer::isLogged)
+                .flatMap(this::findCartByCustomer)
+                .orElseGet(this::createOrder);
+    }
+
+    private Optional<Order> findCartByCustomer(Customer customerInSession) {
+        log.debug("Searching for cart saved for customer {}.", customerInSession.getId());
+        Optional<Order> loggedCustomerCart = orderRepository.findFirstByCustomerOrderByIdDesc(customerInSession)
+                .filter(this::hasNewStatus);
+        loggedCustomerCart.ifPresent(this::saveOrderInSession);
+
+        return loggedCustomerCart;
+    }
+
+    private boolean hasNewStatus(Order order) {
+        return NEW.equals(order.getStatus());
     }
 
     private Order createOrder() {
         Customer customer = customerInSessionService.getFromSessionOrCreate();
         Order order = saveNewOrder(customer);
+        log.debug("Created new order {} for customer {}.", order.getId(), customer.getId());
         saveOrderInSession(order);
 
         return order;

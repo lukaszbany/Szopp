@@ -9,11 +9,12 @@ import pl.betweenthelines.szopp.rest.dto.product.AddProductDTO;
 import pl.betweenthelines.szopp.rest.dto.product.EditProductDTO;
 import pl.betweenthelines.szopp.rest.dto.product.ProductDTO;
 import pl.betweenthelines.szopp.rest.dto.product.factory.ProductDTOFactory;
+import pl.betweenthelines.szopp.rest.success.SuccessResponse;
+import pl.betweenthelines.szopp.rest.success.SuccessResponseFactory;
 import pl.betweenthelines.szopp.service.product.ProductImageService;
 import pl.betweenthelines.szopp.service.product.ProductService;
 
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -29,6 +30,9 @@ public class ProductEndpoint {
 
     @Autowired
     private ProductDTOFactory productDTOFactory;
+
+    @Autowired
+    private SuccessResponseFactory successResponseFactory;
 
     @RequestMapping(method = GET, value = "/products")
     public List<ProductDTO> getProducts(@RequestParam(required = false) String name) {
@@ -59,10 +63,10 @@ public class ProductEndpoint {
     }
 
     @RequestMapping(method = PUT, value = "/products")
-    public ResponseEntity<String> editProduct(@RequestBody @Valid EditProductDTO editProductDTO) {
+    public ResponseEntity<SuccessResponse> editProduct(@RequestBody @Valid EditProductDTO editProductDTO) {
         productService.editProduct(editProductDTO);
 
-        return ResponseEntity.ok("Success");
+        return successResponseFactory.buildSuccessResponseEntity("success.product.edit");
     }
 
     @RequestMapping(method = DELETE, value = "/products/{id}")

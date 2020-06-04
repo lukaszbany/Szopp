@@ -41,7 +41,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(GET, "/customers").hasAnyRole(ADMIN.name(), STAFF.name())
                 .antMatchers("/customers/my-data").permitAll()
-                .antMatchers(GET, "/customers/**/orders").hasRole(REGISTERED_USER.name())
+                .antMatchers(GET, "/my-orders").hasRole(REGISTERED_USER.name())
                 .antMatchers(GET, "/customers/**").hasAnyRole(ADMIN.name(), STAFF.name())
 
                 .antMatchers("/cart/**").access("hasRole('REGISTERED_USER') || isAnonymous()")

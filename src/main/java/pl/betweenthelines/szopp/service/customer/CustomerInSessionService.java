@@ -23,15 +23,10 @@ public class CustomerInSessionService {
     @Transactional
     public Customer getFromSessionOrCreate() {
         Long customerId = sessionAttributes.getCustomerId();
-        if (customerId != null) {
-            Optional<Customer> customer = customerRepository.findById(customerId);
-            if (customer.isPresent()) {
-                log.debug("Found customer {} in session.", customer.get().getId());
-                return customer.get();
-            }
-        }
 
-        return createCustomer();
+        return Optional.ofNullable(customerId)
+                .flatMap(customerRepository::findById)
+                .orElseGet(this::createCustomer);
     }
 
     @Transactional

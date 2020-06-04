@@ -7,7 +7,8 @@ import pl.betweenthelines.szopp.domain.Customer;
 import pl.betweenthelines.szopp.domain.CustomerType;
 import pl.betweenthelines.szopp.domain.repository.CustomerRepository;
 import pl.betweenthelines.szopp.exception.NotFoundException;
-import pl.betweenthelines.szopp.rest.dto.customer.EditCustomerDTO;
+import pl.betweenthelines.szopp.rest.dto.customer.AddressDataDTO;
+import pl.betweenthelines.szopp.service.order.OrderService;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -41,29 +42,29 @@ public class CustomerService {
     }
 
     @Transactional
-    public void editCustomerData(EditCustomerDTO editCustomerDTO) {
+    public void editCustomerData(AddressDataDTO addressDataDTO) {
         Customer customer = getCustomer();
 
         log.info("Updating data of customer {}", customer.getId());
-        fillFields(customer, editCustomerDTO);
+        fillFields(customer, addressDataDTO);
     }
 
-    private void fillFields(Customer customer, EditCustomerDTO editCustomerDTO) {
-        customer.setFirstName(editCustomerDTO.getFirstName());
-        customer.setLastName(editCustomerDTO.getLastName());
-        customer.setEmail(editCustomerDTO.getEmail());
-        customer.setPhone(editCustomerDTO.getPhone());
-        customer.setZipCode(editCustomerDTO.getZipCode());
-        customer.setCity(editCustomerDTO.getCity());
-        customer.setStreet(editCustomerDTO.getStreet());
-        customer.setType(getType(editCustomerDTO));
-        customer.setCompanyName(editCustomerDTO.getCompanyName());
-        customer.setNip(editCustomerDTO.getNip());
+    private void fillFields(Customer customer, AddressDataDTO addressDataDTO) {
+        customer.setFirstName(addressDataDTO.getFirstName());
+        customer.setLastName(addressDataDTO.getLastName());
+        customer.setEmail(addressDataDTO.getEmail());
+        customer.setPhone(addressDataDTO.getPhone());
+        customer.setZipCode(addressDataDTO.getZipCode());
+        customer.setCity(addressDataDTO.getCity());
+        customer.setStreet(addressDataDTO.getStreet());
+        customer.setType(getType(addressDataDTO));
+        customer.setCompanyName(addressDataDTO.getCompanyName());
+        customer.setNip(addressDataDTO.getNip());
     }
 
-    private CustomerType getType(EditCustomerDTO editCustomerDTO) {
-        if (editCustomerDTO.getType() != null) {
-            return editCustomerDTO.getType();
+    private CustomerType getType(AddressDataDTO addressDataDTO) {
+        if (addressDataDTO.getType() != null) {
+            return addressDataDTO.getType();
         }
 
         return INDIVIDUAL;

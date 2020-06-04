@@ -24,4 +24,6 @@ public class OrderItemDTO {
 
     private Integer quantity;
 
+    private BigDecimal totalPrice;
+
 }

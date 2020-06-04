@@ -5,8 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pl.betweenthelines.szopp.domain.OrderStatus;
-import pl.betweenthelines.szopp.rest.dto.shipment.ShipmentAddressDTO;
+import pl.betweenthelines.szopp.rest.dto.customer.ShipmentAddressDTO;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -29,5 +30,7 @@ public class OrderDTO {
     private List<OrderItemDTO> orderItems;
 
     private ShipmentAddressDTO shipmentAddress;
+
+    private BigDecimal totalPrice;
 
 }

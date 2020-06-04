@@ -1,22 +1,21 @@
-package pl.betweenthelines.szopp.rest.dto.shipment;
+package pl.betweenthelines.szopp.rest.dto.customer;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pl.betweenthelines.szopp.domain.CustomerType;
+import pl.betweenthelines.szopp.rest.dto.validation.ValidAddressData;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-@Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShipmentAddressDTO {
-
-    private Long id;
+@ValidAddressData
+public class AddressDataDTO {
 
     @NotBlank(message = "{validation.first.name.blank}")
     private String firstName;
@@ -28,10 +27,10 @@ public class ShipmentAddressDTO {
     @NotBlank(message = "{validation.email.blank}")
     private String email;
 
+    private String phone;
+
     @NotBlank(message = "{validation.city.blank}")
     private String city;
-
-    private String phone;
 
     @Pattern(regexp = "[0-9]{2}-[0-9]{3}", message = "{validation.zip.code.invalid}")
     @NotBlank(message = "{validation.zip.code.blank}")
@@ -41,7 +40,7 @@ public class ShipmentAddressDTO {
     private String street;
 
     @NotNull(message = "{validation.type.blank}")
-    private String type;
+    private CustomerType type;
 
     private String companyName;
 

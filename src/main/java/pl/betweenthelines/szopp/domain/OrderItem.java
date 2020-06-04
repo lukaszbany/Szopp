@@ -47,4 +47,8 @@ public class OrderItem {
         quantity = quantity - count;
     }
 
+    public BigDecimal getTotalPrice() {
+        return price.multiply(BigDecimal.valueOf(quantity));
+    }
+
 }

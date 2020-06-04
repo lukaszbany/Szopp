@@ -3,19 +3,18 @@ package pl.betweenthelines.szopp.service.order.checkout;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import pl.betweenthelines.szopp.domain.CustomerType;
+import pl.betweenthelines.szopp.domain.Customer;
 import pl.betweenthelines.szopp.domain.Order;
 import pl.betweenthelines.szopp.domain.ShipmentAddress;
 import pl.betweenthelines.szopp.domain.repository.ShipmentAddressRepository;
 import pl.betweenthelines.szopp.exception.ProductInCartNotAvailableAnymoreException;
-import pl.betweenthelines.szopp.rest.dto.shipment.ShipmentAddressDTO;
+import pl.betweenthelines.szopp.exception.SzoppException;
+import pl.betweenthelines.szopp.rest.dto.customer.AddressDataDTO;
 import pl.betweenthelines.szopp.service.order.OrderInSessionService;
 import pl.betweenthelines.szopp.service.order.checkout.validation.OrderValidationService;
 import pl.betweenthelines.szopp.service.product.ProductStockService;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 
 import static pl.betweenthelines.szopp.domain.OrderStatus.SUBMITTED;
 
@@ -36,7 +35,7 @@ public class CheckoutService {
     private ProductStockService productStockService;
 
     @Transactional(dontRollbackOn = ProductInCartNotAvailableAnymoreException.class)
-    public void checkout(ShipmentAddressDTO shipmentAddressDTO) {
+    public void checkout(AddressDataDTO shipmentAddressDTO) {
         Order order = orderInSessionService.getFromSessionOrCreate();
         validateOrder(order);
 
@@ -50,19 +49,48 @@ public class CheckoutService {
         productStockService.updateStock(order);
     }
 
-    private void saveShipmentAddressIfNeeded(@RequestBody(required = false) @Valid ShipmentAddressDTO shipmentAddressDTO, Order order) {
-        if (shipmentAddressDTO != null) {
+    private void saveShipmentAddressIfNeeded(AddressDataDTO shipmentAddressDTO, Order order) {
+        if (shipmentAddressDTO == null) {
+            copyShipmentAddressFromCustomer(order);
+        } else {
             saveShipmentAddress(shipmentAddressDTO, order);
         }
     }
 
-    private void saveShipmentAddress(@RequestBody(required = false) @Valid ShipmentAddressDTO shipmentAddressDTO, Order order) {
+    private void copyShipmentAddressFromCustomer(Order order) {
+        ShipmentAddress shipmentAddress = createShipmentAddressFromCustomerAddress(order);
+        order.setShipmentAddress(shipmentAddress);
+        shipmentAddressRepository.save(shipmentAddress);
+    }
+
+    private void saveShipmentAddress(AddressDataDTO shipmentAddressDTO, Order order) {
         ShipmentAddress shipmentAddress = createShipmentAddress(shipmentAddressDTO, order);
         order.setShipmentAddress(shipmentAddress);
         shipmentAddressRepository.save(shipmentAddress);
     }
 
-    private ShipmentAddress createShipmentAddress(@RequestBody(required = false) @Valid ShipmentAddressDTO shipmentAddressDTO, Order order) {
+    private ShipmentAddress createShipmentAddressFromCustomerAddress(Order order) {
+        Customer customer = order.getCustomer();
+        if (customer == null) {
+            throw new SzoppException();
+        }
+
+        return ShipmentAddress.builder()
+                .order(order)
+                .firstName(customer.getFirstName())
+                .lastName(customer.getLastName())
+                .email(customer.getEmail())
+                .phone(customer.getPhone())
+                .city(customer.getCity())
+                .zipCode(customer.getZipCode())
+                .street(customer.getStreet())
+                .type(customer.getType())
+                .companyName(customer.getCompanyName())
+                .nip(customer.getNip())
+                .build();
+    }
+
+    private ShipmentAddress createShipmentAddress(AddressDataDTO shipmentAddressDTO, Order order) {
         return ShipmentAddress.builder()
                 .order(order)
                 .firstName(shipmentAddressDTO.getFirstName())
@@ -72,7 +100,7 @@ public class CheckoutService {
                 .city(shipmentAddressDTO.getCity())
                 .zipCode(shipmentAddressDTO.getZipCode())
                 .street(shipmentAddressDTO.getStreet())
-                .type(CustomerType.valueOf(shipmentAddressDTO.getType()))
+                .type(shipmentAddressDTO.getType())
                 .companyName(shipmentAddressDTO.getCompanyName())
                 .nip(shipmentAddressDTO.getNip())
                 .build();

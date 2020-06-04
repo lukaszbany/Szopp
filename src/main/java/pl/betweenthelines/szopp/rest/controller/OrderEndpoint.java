@@ -22,9 +22,9 @@ public class OrderEndpoint {
     @Autowired
     private OrderDTOFactory orderDTOFactory;
 
-    @RequestMapping(method = GET, value = "/customers/{customerId}/orders")
-    public List<OrderDTO> getCustomerOrders(@PathVariable Long customerId) {
-        List<Order> customerOrders = orderService.getCustomerOrders(customerId);
+    @RequestMapping(method = GET, value = "/my-orders")
+    public List<OrderDTO> getCustomerOrders() {
+        List<Order> customerOrders = orderService.getCustomerOrders();
 
         return orderDTOFactory.buildOrderDTOs(customerOrders);
     }

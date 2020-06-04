@@ -11,6 +11,7 @@ import pl.betweenthelines.szopp.rest.dto.product.EditProductDTO;
 import pl.betweenthelines.szopp.service.category.CategoryService;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,8 +36,22 @@ public class ProductService {
     @Transactional
     public List<Product> getProductsByCategory(Long categoryId) {
         Category category = categoryService.getCategory(categoryId);
+        List<Category> categoryAndChildren = getChildrenRecursively(category);
 
-        return productRepository.findAllByCategory(category);
+        return productRepository.findAllByCategoryIn(categoryAndChildren);
+    }
+
+
+
+    private List<Category> getChildrenRecursively(Category category) {
+        List<Category> children = new ArrayList<>();
+        children.add(category);
+
+        for (Category child : category.getChildCategories()) {
+            children.addAll(getChildrenRecursively(child));
+        }
+
+        return children;
     }
 
     @Transactional

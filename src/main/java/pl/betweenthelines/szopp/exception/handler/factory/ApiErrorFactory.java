@@ -1,5 +1,6 @@
 package pl.betweenthelines.szopp.exception.handler.factory;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 
+@Slf4j
 @Component
 public class ApiErrorFactory {
 
@@ -21,6 +23,7 @@ public class ApiErrorFactory {
     private ValidationErrorFactory validationErrorFactory;
 
     public ApiError buildApiError(Exception e) {
+        log.info("There was an exception", e);
         Exceptions exception = Exceptions.get(e);
 
         return ApiError.builder()

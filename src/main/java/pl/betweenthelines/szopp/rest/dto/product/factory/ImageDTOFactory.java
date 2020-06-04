@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import pl.betweenthelines.szopp.domain.ProductImage;
 import pl.betweenthelines.szopp.rest.dto.product.ImageDTO;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,12 @@ public class ImageDTOFactory {
     public List<ImageDTO> buildImageDTOs(List<ProductImage> productImages) {
         return productImages.stream()
                 .map(this::buildImageDTO)
+                .sorted(byOrder())
                 .collect(Collectors.toList());
+    }
+
+    private Comparator<ImageDTO> byOrder() {
+        return Comparator.comparing(ImageDTO::getOrder);
     }
 
     public ImageDTO buildImageDTO(ProductImage productImage) {

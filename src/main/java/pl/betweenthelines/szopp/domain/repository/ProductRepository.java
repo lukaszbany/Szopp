@@ -10,11 +10,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-//    @Override
-//    @Lock(PESSIMISTIC_WRITE)
-//    Optional<Product> findById(@NonNull Long aLong); //TODO: Lock on product (quantity must be correct)
-
-    List<Product> findAllByCategory(Category category);
+    List<Product> findAllByCategoryIn(List<Category> category);
 
     List<Product> findAllByNameContainingIgnoreCase(String name);
 

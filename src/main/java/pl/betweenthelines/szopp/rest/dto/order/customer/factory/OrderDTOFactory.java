@@ -5,11 +5,12 @@ import org.springframework.stereotype.Component;
 import pl.betweenthelines.szopp.domain.Order;
 import pl.betweenthelines.szopp.domain.OrderItem;
 import pl.betweenthelines.szopp.domain.ShipmentAddress;
+import pl.betweenthelines.szopp.rest.dto.customer.ShipmentAddressDTO;
+import pl.betweenthelines.szopp.rest.dto.customer.factory.AddressDataDTOFactory;
 import pl.betweenthelines.szopp.rest.dto.order.customer.OrderDTO;
 import pl.betweenthelines.szopp.rest.dto.order.customer.OrderItemDTO;
-import pl.betweenthelines.szopp.rest.dto.shipment.ShipmentAddressDTO;
-import pl.betweenthelines.szopp.rest.dto.shipment.factory.ShipmentAddressDTOFactory;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,12 +21,17 @@ public class OrderDTOFactory {
     private OrderItemDTOFactory orderItemDTOFactory;
 
     @Autowired
-    private ShipmentAddressDTOFactory shipmentAddressDTOFactory;
+    private AddressDataDTOFactory addressDataDTOFactory;
 
     public List<OrderDTO> buildOrderDTOs(List<Order> orders) {
         return orders.stream()
                 .map(this::buildOrderDTO)
+                .sorted(byIdDesc())
                 .collect(Collectors.toList());
+    }
+
+    private Comparator<OrderDTO> byIdDesc() {
+        return Comparator.comparing(OrderDTO::getId).reversed();
     }
 
     public OrderDTO buildOrderDTO(Order order) {
@@ -37,12 +43,13 @@ public class OrderDTOFactory {
                 .status(order.getStatus())
                 .orderItems(getOrderItemsDTO(order))
                 .shipmentAddress(getShipmentAddress(order))
+                .totalPrice(order.getTotalPrice())
                 .build();
     }
 
     private ShipmentAddressDTO getShipmentAddress(Order order) {
         ShipmentAddress shipmentAddress = order.getShipmentAddress();
-        return shipmentAddressDTOFactory.buildShipmentAddressDTO(shipmentAddress);
+        return addressDataDTOFactory.buildShipmentAddressDTO(shipmentAddress);
     }
 
     private List<OrderItemDTO> getOrderItemsDTO(Order order) {
