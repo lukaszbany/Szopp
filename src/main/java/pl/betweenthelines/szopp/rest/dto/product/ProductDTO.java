@@ -20,6 +20,8 @@ public class ProductDTO {
 
     private String description;
 
+    private String shortDescription;
+
     private BigDecimal price;
 
     private Long categoryId;
@@ -27,5 +29,7 @@ public class ProductDTO {
     private Integer inStock;
 
     private List<ImageDTO> images;
+
+    private boolean active;
 
 }

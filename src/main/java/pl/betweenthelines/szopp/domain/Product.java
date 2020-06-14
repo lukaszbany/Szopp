@@ -34,6 +34,10 @@ public class Product {
     private String description;
 
     @Setter
+    @Column(name = "short_description")
+    private String shortDescription;
+
+    @Setter
     @Column(name = "price")
     private BigDecimal price;
 
@@ -45,6 +49,10 @@ public class Product {
     @Setter
     @Column(name = "in_stock")
     private int inStock;
+
+    @Setter
+    @Column(name = "is_active")
+    private boolean isActive;
 
     @OneToMany(mappedBy = "product")
     private List<ProductImage> images = new ArrayList<>();

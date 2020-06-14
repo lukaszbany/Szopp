@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import pl.betweenthelines.szopp.domain.Customer;
 import pl.betweenthelines.szopp.exception.SzoppException;
 import pl.betweenthelines.szopp.exception.UserAlreadyExistsException;
+import pl.betweenthelines.szopp.exception.UserNotLoggedException;
 import pl.betweenthelines.szopp.security.domain.Role;
 import pl.betweenthelines.szopp.security.domain.RoleName;
 import pl.betweenthelines.szopp.security.domain.User;
@@ -20,7 +21,8 @@ import pl.betweenthelines.szopp.service.customer.CustomerInSessionService;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static pl.betweenthelines.szopp.security.domain.RoleName.REGISTERED_USER;
 
@@ -88,19 +90,45 @@ public class AuthenticationService {
 
     public User tryToGetLoggedUser() {
         return findLoggedUser()
-                .orElseThrow(SzoppException::new);
+                .orElseThrow(UserNotLoggedException::new);
     }
 
     public Optional<User> findLoggedUser() {
         UserDetails userDetails = getUserDetails();
-        String username = userDetails.getUsername();
+        if (userDetails == null) {
+            return Optional.empty();
+        }
 
+        String username = userDetails.getUsername();
         return userRepository.findByUsername(username);
+    }
+
+    private Set<RoleName> findLoggedUserRoleNames() {
+        return findLoggedUser()
+                .stream()
+                .map(User::getRoles)
+                .flatMap(Collection::stream)
+                .filter(Objects::nonNull)
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+    }
+
+    public boolean hasAnyRole(RoleName... searchedRoles) {
+        Set<RoleName> userRoles = findLoggedUserRoleNames();
+
+        return Arrays.stream(searchedRoles)
+                .anyMatch(userRoles::contains);
     }
 
     private UserDetails getUserDetails() {
         Authentication auth = tryToGetAuthentication();
-        return (UserDetails) auth.getPrincipal();
+
+        Object principal = auth.getPrincipal();
+        if (!(principal instanceof UserDetails)) {
+            return null;
+        }
+
+        return (UserDetails) principal;
     }
 
     private Authentication tryToGetAuthentication() {

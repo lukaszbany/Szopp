@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.betweenthelines.szopp.domain.Category;
 import pl.betweenthelines.szopp.domain.Product;
+import pl.betweenthelines.szopp.domain.repository.OrderItemRepository;
 import pl.betweenthelines.szopp.domain.repository.ProductRepository;
 import pl.betweenthelines.szopp.exception.NotFoundException;
 import pl.betweenthelines.szopp.rest.dto.product.AddProductDTO;
@@ -11,6 +12,7 @@ import pl.betweenthelines.szopp.rest.dto.product.EditProductDTO;
 import pl.betweenthelines.szopp.service.category.CategoryService;
 
 import javax.transaction.Transactional;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,9 @@ public class ProductService {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Transactional
     public Product getProduct(Long id) {
@@ -40,7 +45,6 @@ public class ProductService {
 
         return productRepository.findAllByCategoryIn(categoryAndChildren);
     }
-
 
 
     private List<Category> getChildrenRecursively(Category category) {
@@ -64,10 +68,10 @@ public class ProductService {
     }
 
     @Transactional
-    public void addProduct(AddProductDTO addProductDTO) {
+    public Product addProduct(AddProductDTO addProductDTO) {
         Product product = createProduct(addProductDTO);
 
-        productRepository.save(product);
+        return productRepository.save(product);
     }
 
     private Product createProduct(AddProductDTO addProductDTO) {
@@ -76,9 +80,11 @@ public class ProductService {
         return Product.builder()
                 .name(addProductDTO.getName())
                 .description(addProductDTO.getDescription())
-                .price(addProductDTO.getPrice())
+                .shortDescription(addProductDTO.getShortDescription())
+                .price(addProductDTO.getPrice().setScale(2, RoundingMode.DOWN))
                 .category(category)
                 .inStock(addProductDTO.getInStock())
+                .isActive(addProductDTO.isActive())
                 .build();
     }
 
@@ -89,14 +95,20 @@ public class ProductService {
         Product product = getProduct(editProductDTO.getId());
         product.setName(editProductDTO.getName());
         product.setDescription(editProductDTO.getDescription());
+        product.setShortDescription(editProductDTO.getShortDescription());
         product.setCategory(category);
+        product.setPrice(editProductDTO.getPrice().setScale(2, RoundingMode.DOWN));
         product.setInStock(editProductDTO.getInStock());
+        product.setActive(editProductDTO.isActive());
     }
 
     @Transactional
-    public void deleteProduct(Long id) {
-        Product product = getProduct(id);
-
+    public void deleteProduct(Product product) {
         productRepository.delete(product);
+    }
+
+    public boolean hasOrders(Product product) {
+        return !orderItemRepository.findByProduct(product)
+                .isEmpty();
     }
 }

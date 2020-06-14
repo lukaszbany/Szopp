@@ -22,4 +22,6 @@ public class EditCategoryDTO {
 
     private Long parentCategoryId;
 
+    private boolean active;
+
 }

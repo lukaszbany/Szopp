@@ -60,7 +60,8 @@ public class Order {
     }
 
     private boolean canBeChangedTo(OrderStatus status) {
-        return OrderStatus.TRANSITIONS.get(this.status).equals(status);
+        return OrderStatus.ALLOWED_TRANSITIONS.get(this.status)
+                .contains(status);
     }
 
     public BigDecimal getTotalPrice() {

@@ -1,5 +1,6 @@
 package pl.betweenthelines.szopp.rest.controller;
 
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import pl.betweenthelines.szopp.rest.dto.product.ProductDTO;
 import pl.betweenthelines.szopp.rest.dto.product.factory.ProductDTOFactory;
 import pl.betweenthelines.szopp.rest.success.SuccessResponse;
 import pl.betweenthelines.szopp.rest.success.SuccessResponseFactory;
+import pl.betweenthelines.szopp.service.product.ProductDeleteService;
 import pl.betweenthelines.szopp.service.product.ProductImageService;
 import pl.betweenthelines.szopp.service.product.ProductService;
 
@@ -27,6 +29,9 @@ public class ProductEndpoint {
 
     @Autowired
     private ProductImageService productImageService;
+
+    @Autowired
+    private ProductDeleteService productDeleteService;
 
     @Autowired
     private ProductDTOFactory productDTOFactory;
@@ -56,10 +61,10 @@ public class ProductEndpoint {
     }
 
     @RequestMapping(method = POST, value = "/products")
-    public String addProduct(@RequestBody @Valid AddProductDTO addProductDTO) {
-        productService.addProduct(addProductDTO);
+    public ProductDTO addProduct(@RequestBody @Valid AddProductDTO addProductDTO) {
+        Product product = productService.addProduct(addProductDTO);
 
-        return "OK";
+        return productDTOFactory.buildProductDTO(product);
     }
 
     @RequestMapping(method = PUT, value = "/products")
@@ -70,17 +75,34 @@ public class ProductEndpoint {
     }
 
     @RequestMapping(method = DELETE, value = "/products/{id}")
-    public String deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    public ResponseEntity<SuccessResponse> deleteProduct(@PathVariable Long id) {
+        productDeleteService.deleteProduct(id);
 
-        return "OK";
+        return successResponseFactory.buildSuccessResponseEntity("success.product.delete");
     }
 
     @RequestMapping(method = POST, value = "/products/{productId}/image")
-    public String uploadProductImage(@PathVariable Long productId, @RequestParam MultipartFile image) {
-        productImageService.addProductImage(productId, image);
+    public ResponseEntity<SuccessResponse> uploadProductImage(@PathVariable Long productId, @RequestParam MultipartFile image, @RequestParam String description) {
+        productImageService.addProductImage(productId, image, description);
 
-        return "OK";
+        return successResponseFactory.buildSuccessResponseEntity("success.product.image.add");
+    }
+
+    @RequestMapping(method = PUT, value = "/products/{productId}/image/{imageId}")
+    public ResponseEntity<SuccessResponse> editProductImageOrder(
+            @PathVariable Long productId, @PathVariable Long imageId, @RequestBody @NonNull Integer order) {
+        productImageService.editProductImageOrder(productId, imageId, order);
+
+        return successResponseFactory.buildSuccessResponseEntity("success.product.image.edit");
+    }
+
+    @RequestMapping(method = DELETE, value = "/products/{productId}/image/{imageId}")
+    public ResponseEntity<SuccessResponse> deleteProductImage(
+            @PathVariable Long productId, @PathVariable Long imageId) {
+
+        productImageService.deleteProductImage(productId, imageId);
+
+        return successResponseFactory.buildSuccessResponseEntity("success.product.image.delete");
     }
 
 }

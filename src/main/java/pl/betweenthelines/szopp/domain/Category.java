@@ -1,11 +1,13 @@
 package pl.betweenthelines.szopp.domain;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -40,10 +42,15 @@ public class Category {
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "category")
     private List<Product> products = new ArrayList<>();
 
+    @Setter
+    @Column(name = "is_active")
+    private boolean isActive;
+
     @Builder
-    public Category(String name, String description) {
+    public Category(String name, String description, boolean isActive) {
         this.name = name;
         this.description = description;
+        this.isActive = isActive;
     }
 
     @Override

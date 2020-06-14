@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +23,10 @@ public class EditProductDTO {
 
     private String description;
 
+    private String shortDescription;
+
+    @Max(value = 99999, message = "{validation.product.price.max}")
+    @Min(value = 0, message = "{validation.product.price.negative}")
     @NotNull(message = "{validation.product.price.blank}")
     private BigDecimal price;
 
@@ -29,7 +34,10 @@ public class EditProductDTO {
     private Long categoryId;
 
     @Min(value = 0, message = "{validation.product.stock.negative}")
+    @Max(value = 999, message = "{validation.product.stock.max}")
     @NotNull(message = "{validation.product.stock.blank}")
     private Integer inStock;
+
+    private boolean active;
 
 }

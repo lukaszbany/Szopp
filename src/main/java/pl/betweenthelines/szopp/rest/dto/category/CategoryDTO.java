@@ -23,4 +23,6 @@ public class CategoryDTO {
 
     private List<CategoryDTO> childCategories;
 
+    private boolean active;
+
 }

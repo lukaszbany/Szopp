@@ -8,10 +8,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
+
 @Component
 public class ImageDTOFactory {
 
     public List<ImageDTO> buildImageDTOs(List<ProductImage> productImages) {
+        if (productImages == null) {
+            return emptyList();
+        }
+
         return productImages.stream()
                 .map(this::buildImageDTO)
                 .sorted(byOrder())

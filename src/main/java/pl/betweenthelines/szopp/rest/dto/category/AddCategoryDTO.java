@@ -18,4 +18,6 @@ public class AddCategoryDTO {
 
     private Long parentCategoryId;
 
+    private boolean active;
+
 }
